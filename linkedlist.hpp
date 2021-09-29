@@ -21,7 +21,7 @@ struct node{
 template<class T>
 class linkedlist{
 public:
-    node<T> &operator[](unsigned long pos);
+    node<T> *operator[](unsigned long pos);
     node<T> *push_back(T data);
     node<T> *push_front(T data);
     node<T> *back();
@@ -35,6 +35,7 @@ public:
     void remove(T target);
     unsigned long size();
     bool empty();
+    ~linkedlist();
 private:
     node<T> *frontptr = nullptr;
     node<T> *backptr = nullptr;
@@ -48,16 +49,28 @@ void linkedlist<T>::pop_back(){
     if(backptr -> next != nullptr)
         backptr = backptr -> next;
     if(aux -> next == nullptr) //la lista tiene un solo elemento
-        backptr = nullptr;
+        frontptr = backptr = nullptr;
     else
         aux -> next -> previous = nullptr;
     free(aux);
 }
 
 template<class T>
+void linkedlist<T>::pop_front(){
+    sizepr--;
+    node<T> *aux = frontptr;
+    if(frontptr -> previous != nullptr)
+        frontptr = frontptr -> previous;
+    if(aux -> previous == nullptr) //la lista tiene un solo elem
+        frontptr = backptr = nullptr;
+    else
+        aux -> previous -> next = nullptr;
+    free(aux);
+}
+
+template<class T>
 node<T> *linkedlist<T>::push_back(T data){
-    node<T> n(data);
-    node<T> *ret = (node<T> *)malloc(sizeof(n));
+    node<T> *ret = (node<T> *)malloc(sizeof(node<T>));
     if(backptr != nullptr)
         ret -> next = backptr;
     else
@@ -74,14 +87,47 @@ node<T> *linkedlist<T>::push_back(T data){
 }
 
 template<class T>
-node<T> &linkedlist<T>::operator[](unsigned long pos){
+node<T> *linkedlist<T>::push_front(T data){
+    node<T> *ret = (node<T> *)malloc(sizeof(node<T>));
+    if(frontptr != nullptr)
+        ret -> previous = frontptr;
+    else
+        ret -> previous = nullptr;
+    ret -> next = nullptr;
+    ret -> data = data;
+    if(sizepr != 0)
+        frontptr -> next = ret;
+    frontptr = ret;
+    if(sizepr == 0)
+        frontptr = backptr = ret;
+    sizepr++;
+    return ret;
+}
+
+template<class T>
+node<T> *linkedlist<T>::operator[](unsigned long pos){
     node<T> *n = backptr;
-    while(pos--){
-        if(n -> next == nullptr)
-            throw std::invalid_argument("index bigger than list");
-        n = n -> next;
+    unsigned long size = sizepr;
+    size--;
+    if(pos > size)
+        throw std::invalid_argument("index bigger than list");
+    size++;
+    unsigned long mitad = size / 2;
+    if(pos <= mitad){
+        while(pos--){
+            n = n -> next;
+        }
     }
-    return *n;
+    else{
+        pos = size - pos;
+        pos--;
+        n = frontptr;
+        while (pos--){
+            n = n -> previous;
+        }
+        
+    }
+    return n;
 }
 
 template<class T>
@@ -94,6 +140,41 @@ bool linkedlist<T>::empty(){
 template<class T>
 unsigned long linkedlist<T>::size(){
     return sizepr;
+}
+
+template<class T>
+node<T> *linkedlist<T>::back(){
+    return backptr;
+}
+
+template<class T>
+node<T> *linkedlist<T>::front(){
+    return frontptr;
+}
+
+template<class T>
+node<T> *linkedlist<T>::search(T data){
+    node<T> *ret = backptr;
+    for(int n = 0; n != size(); n++){
+        if(ret -> data == data){
+            return ret;
+        }
+        ret = ret -> next;
+    }
+}
+
+template<class T>
+node<T> *linkedlist<T>::insert(T data, node<T> *index){
+    if(index == backptr)
+        return push_back(data);
+    if(index == frontptr)
+        return push_front(data);
+    node<T> *ret = (node<T> *)malloc(sizeof(node<T>));
+    ret -> next = index -> next;
+    ret -> previous = index;
+    index -> next -> previous = ret;
+    index -> next = ret;
+    return ret;
 }
 
 }
