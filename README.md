@@ -137,13 +137,110 @@ Usage:
 #include "linkedlist.hpp"
 
 int main(){
-  linked::linkedlist<int>
+  linked::linkedlist<int> ll;
+  ll.push_back(1)
+  linked::node<int> *n = ll.push_back(2);
+  ll.push_back(4);
+  ll.insert(3, n);
+  std::cout << ll[2] -> data << std::endl; //prints 3
 }
 ```
-node<T> *insert(T data, unsigned long index);
-void pop_back();
-void pop_front();
-void remove(node<T> *target);
-void remove(T target);
-unsigned long size();
-bool empty();
+## node<T> *insert(T data, unsigned long index);
+Inserts an element after index<br>
+Returns: pointer to inserted element<br>
+Time complexity: O(1)<br>
+Exceptions: none<br>
+Usage:
+```
+#include <iostream>
+#include "linkedlist.hpp"
+
+int main(){
+  linked::linkedlist<int> ll;
+  ll.push_back(1)
+  ll.push_back(2);
+  ll.push_back(4);
+  ll.insert(3, 1);
+  std::cout << ll[2] -> data << std::endl; //prints 3
+}
+```
+## void pop_back();
+Deletes element in the back of the list<br>
+Returns: nothing
+Time complexity: O(1)<br>
+Exceptions: none<br>
+Usage:
+```
+#include <iostream>
+#include "linkedlist.hpp"
+  
+int main(){
+  linked::linkedlist<int> ll;
+  ll.push_back(1);
+  ll.push_back(2);
+  ll.push_back(3);
+  ll.pop_back(); // deletes 3
+}
+```
+## void pop_front();
+Deletes element in the front of the list<br>
+Returns: nothing
+Time complexity: O(1)<br>
+Exceptions: none<br>
+Usage:
+```
+#include <iostream>
+#include "linkedlist.hpp"
+  
+int main(){
+  linked::linkedlist<int> ll;
+  ll.push_back(1);
+  ll.push_back(2);
+  ll.push_back(3);
+  ll.pop_front(); // deletes 1
+}
+```
+## void remove(node<T> *target);
+Deletes `target` from the list<br>
+Returns: nothing<br>
+Time complexity: O(1)<br>
+Exceptions: none<br>
+Usage:
+```
+#include <iostream>
+#include "linkedlist.hpp"
+  
+int main(){
+  linked::linkedlist<int> ll;
+  ll.push_back(1);
+  ll.push_back(2);
+  linked::node<int> *n = ll.push_back(3);
+  ll.push_back(3);
+  ll.push_back(4);
+  ll.remove(n); // list ends like this: 4, 3, 2, 1
+}
+```
+## void remove(T target);
+Deletes all instances of `target` from the list<br>
+Returns: nothing<br>
+Time complexity: O(1)<br>
+Exceptions: none<br>
+Usage:
+```
+#include <iostream>
+#include "linkedlist.hpp"
+  
+int main(){
+  linked::linkedlist<int> ll;
+  ll.push_back(1);
+  ll.push_back(2);
+  ll.push_back(3);
+  ll.push_back(3);
+  ll.push_back(4);
+  ll.remove(3); // list ends like this: 4, 2, 1
+}
+```
+## unsigned long size();
+Returns size of list
+## bool empty();
+Returns whether or not list is empty
